@@ -1,39 +1,6 @@
 # NexusDash — Enterprise Intelligence Platform
 
-A full-stack Angular 17 + Node.js (TypeScript) + MongoDB Atlas SPA with role-based access control, async API processing demonstration, and a creative dark UI.
-
----
-
-## 📁 Project Structure
-
-```
-angular-dashboard-app/
-├── backend/                 # Node.js + TypeScript REST API
-│   ├── src/
-│   │   ├── controllers/     # auth, record, admin controllers
-│   │   ├── middleware/      # auth + delay middleware
-│   │   ├── models/          # Mongoose schemas (User, Record)
-│   │   ├── routes/          # Express route definitions
-│   │   ├── utils/           # DB connection + seed script
-│   │   └── index.ts         # Express app entry point
-│   ├── .env.example
-│   ├── package.json
-│   └── tsconfig.json
-│
-└── frontend/                # Angular 17 SPA
-    └── src/
-        └── app/
-            ├── core/
-            │   ├── guards/         # AuthGuard, AdminGuard
-            │   ├── interceptors/   # JWT + Loading interceptors
-            │   ├── models/         # TypeScript interfaces
-            │   └── services/       # Auth, Record, User, Loading, Notification
-            ├── features/
-            │   ├── auth/           # Login page
-            │   ├── dashboard/      # Dashboard layout + home with records table
-            │   └── admin/          # User management (Admin only)
-            └── shared/             # SharedModule
-```
+A full-stack Angular 17 + Node.js (TypeScript) + MongoDB Atlas SPA with role-based access control, async API processing demonstration, and a creative dark and light UI.
 
 ---
 
@@ -182,22 +149,6 @@ Append `?delay=<milliseconds>` to any endpoint:
 ```
 GET /api/records?delay=2000
 GET /api/records/stats?delay=3000
-```
-
----
-
-## 🏗️ Build for Production
-
-```bash
-# Backend
-cd backend
-npm run build
-npm start
-
-# Frontend
-cd frontend
-npm run build:prod
-# Output: dist/angular-dashboard/
 ```
 
 ---
