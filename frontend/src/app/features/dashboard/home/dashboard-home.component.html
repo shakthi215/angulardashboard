@@ -1,0 +1,246 @@
+<div class="dashboard-page">
+
+  <!-- Header -->
+  <header class="page-header">
+    <div class="header-left">
+      <h1>
+        <span class="greeting">Welcome back,</span>
+        <span class="username">{{ currentUser?.username }}</span>
+      </h1>
+      <div class="access-badge" [class.admin-access]="authService.isAdmin">
+        <span class="dot"></span>
+        {{ accessLevel || (authService.isAdmin ? 'Full Access' : 'Restricted Access') }}
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="user-meta">
+        <span class="meta-label">Department</span>
+        <span class="meta-value">{{ currentUser?.department }}</span>
+      </div>
+      <div class="user-meta">
+        <span class="meta-label">Last Login</span>
+        <span class="meta-value">{{ currentUser?.lastLogin ? (currentUser!.lastLogin | date:'MMM d, h:mm a') : '—' }}</span>
+      </div>
+      <span *ngIf="loadingProfile" class="profile-loading">
+        <span class="mini-spinner"></span>
+      </span>
+    </div>
+  </header>
+
+  <!-- Async Demo Banner -->
+  <div class="async-demo-bar">
+    <div class="async-info">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <strong>Async Loading Demo</strong>
+      <span>Simulate API delay to see parallel async processing</span>
+    </div>
+    <div class="delay-selector">
+      <span class="delay-label">API Delay:</span>
+      <div class="delay-pills">
+        <button
+          *ngFor="let opt of delayOptions"
+          class="delay-pill"
+          [class.active]="simulatedDelay === opt.value"
+          (click)="simulatedDelay = opt.value; onDelayChange()">
+          {{ opt.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngIf="!loadingStats; else statSkeleton">
+      <div class="stat-icon total">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ stats?.totalRecords ?? 0 }}</span>
+        <span class="stat-label">Total Records</span>
+      </div>
+    </div>
+
+    <div class="stat-card" *ngIf="!loadingStats">
+      <div class="stat-icon active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ getStatCount(stats?.statusBreakdown || [], 'Active') }}</span>
+        <span class="stat-label">Active</span>
+      </div>
+    </div>
+
+    <div class="stat-card" *ngIf="!loadingStats">
+      <div class="stat-icon pending">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ getStatCount(stats?.statusBreakdown || [], 'Pending') }}</span>
+        <span class="stat-label">Pending</span>
+      </div>
+    </div>
+
+    <div class="stat-card" *ngIf="!loadingStats">
+      <div class="stat-icon critical">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ getStatCount(stats?.priorityBreakdown || [], 'Critical') }}</span>
+        <span class="stat-label">Critical Priority</span>
+      </div>
+    </div>
+
+    <div class="stat-card" *ngIf="!loadingStats">
+      <div class="stat-icon resolved">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-val">{{ getStatCount(stats?.statusBreakdown || [], 'Resolved') }}</span>
+        <span class="stat-label">Resolved</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #statSkeleton>
+    <div class="stat-card skeleton" *ngFor="let i of [1,2,3,4,5]">
+      <div class="skel-box skel-icon"></div>
+      <div class="skel-lines">
+        <div class="skel-box skel-val"></div>
+        <div class="skel-box skel-label-skel"></div>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Records Table Section -->
+  <div class="table-section">
+    <div class="table-header">
+      <div class="table-title">
+        <h2>Records</h2>
+        <span class="record-count" *ngIf="!loadingRecords">{{ totalRecords }} total</span>
+        <span class="mini-spinner" *ngIf="loadingRecords"></span>
+      </div>
+
+      <div class="table-filters">
+        <!-- Search -->
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input
+            type="text"
+            placeholder="Search records..."
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+            (input)="onSearch()"
+          />
+        </div>
+
+        <!-- Status Filter -->
+        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+          <option value="">All Status</option>
+          <option *ngFor="let s of statuses.slice(1)" [value]="s">{{ s }}</option>
+        </select>
+
+        <!-- Priority Filter -->
+        <select class="filter-select" [(ngModel)]="selectedPriority" (change)="onFilterChange()">
+          <option value="">All Priority</option>
+          <option *ngFor="let p of priorities.slice(1)" [value]="p">{{ p }}</option>
+        </select>
+
+        <!-- Clear -->
+        <button class="clear-btn" (click)="clearFilters()" *ngIf="searchQuery || selectedStatus || selectedPriority">
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <ng-container *ngIf="!loadingRecords; else tableLoader">
+        <table class="records-table" *ngIf="records.length > 0; else emptyState">
+          <thead>
+            <tr>
+              <th>Record ID</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Access</th>
+              <th>Progress</th>
+              <th>Due Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rec of records; trackBy: trackByRecord" class="table-row">
+              <td><span class="record-id">{{ rec.recordId }}</span></td>
+              <td>
+                <div class="title-cell">
+                  <span class="title-text">{{ rec.title }}</span>
+                  <span class="assigned-to">{{ rec.assignedTo }}</span>
+                </div>
+              </td>
+              <td><span class="category-tag">{{ rec.category }}</span></td>
+              <td><span class="status-chip" [class]="'s-' + rec.status.toLowerCase()">{{ rec.status }}</span></td>
+              <td><span class="priority-chip" [class]="'p-' + rec.priority.toLowerCase()">{{ rec.priority }}</span></td>
+              <td>
+                <span class="access-chip" [class]="'a-' + rec.accessLevel.toLowerCase()">
+                  <svg *ngIf="rec.accessLevel === 'Confidential'" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  {{ rec.accessLevel }}
+                </span>
+              </td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="rec.completionPercentage" [class]="'p-' + rec.priority.toLowerCase()"></div>
+                  </div>
+                  <span class="progress-pct">{{ rec.completionPercentage }}%</span>
+                </div>
+              </td>
+              <td><span class="due-date" [class.overdue]="rec.dueDate < ('' + (today | date:'yyyy-MM-dd'))">{{ rec.dueDate | date:'MMM d, y' }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Empty state -->
+        <ng-template #emptyState>
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <p>No records found</p>
+            <button class="clear-btn" (click)="clearFilters()">Clear filters</button>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <!-- Table skeleton loader -->
+      <ng-template #tableLoader>
+        <div class="table-skeleton">
+          <div class="skel-row" *ngFor="let i of [1,2,3,4,5,6]">
+            <div class="skel-box" style="width:80px"></div>
+            <div class="skel-box" style="width:180px"></div>
+            <div class="skel-box" style="width:90px"></div>
+            <div class="skel-box" style="width:70px"></div>
+            <div class="skel-box" style="width:70px"></div>
+            <div class="skel-box" style="width:90px"></div>
+            <div class="skel-box" style="width:120px"></div>
+            <div class="skel-box" style="width:80px"></div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loadingRecords && totalPages > 1">
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button
+        *ngFor="let p of pageNumbers"
+        class="page-btn"
+        [class.active]="p === currentPage"
+        (click)="currentPage = p; loadRecords()">
+        {{ p }}
+      </button>
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,412 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+// ── Reset & Base ─────────────────────────────────────────────
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f6f8fc;
+  color: #172033;
+}
+
+body {
+  --app-bg: #f6f8fc;
+  --app-surface: rgba(255,255,255,0.86);
+  --app-surface-strong: #ffffff;
+  --app-surface-soft: rgba(23,32,51,0.04);
+  --app-border: rgba(23,32,51,0.10);
+  --app-border-strong: rgba(23,32,51,0.16);
+  --app-text: #172033;
+  --app-text-muted: rgba(23,32,51,0.62);
+  --app-text-faint: rgba(23,32,51,0.42);
+  --app-shadow: 0 20px 60px rgba(31,45,75,0.12);
+}
+
+body.theme-dark {
+  --app-bg: #07090f;
+  --app-surface: rgba(255,255,255,0.03);
+  --app-surface-strong: rgba(255,255,255,0.05);
+  --app-surface-soft: rgba(255,255,255,0.05);
+  --app-border: rgba(255,255,255,0.08);
+  --app-border-strong: rgba(255,255,255,0.14);
+  --app-text: #ffffff;
+  --app-text-muted: rgba(255,255,255,0.62);
+  --app-text-faint: rgba(255,255,255,0.40);
+  --app-shadow: 0 24px 80px rgba(0,0,0,0.50);
+  background: #07090f;
+  color: #ffffff;
+}
+
+body.theme-light {
+  background:
+    radial-gradient(circle at top left, rgba(108,99,255,0.10), transparent 34rem),
+    linear-gradient(135deg, #f8fbff 0%, #eef3fb 100%);
+  color: #172033;
+}
+
+// ── Scrollbar ────────────────────────────────────────────────
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+// ── Angular Material Dialog Override ────────────────────────
+.nd-dialog {
+  .mat-mdc-dialog-container {
+    background: transparent !important;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7) !important;
+    border-radius: 16px !important;
+    overflow: hidden;
+    padding: 0 !important;
+
+    .mdc-dialog__surface {
+      background: transparent !important;
+      border-radius: 16px !important;
+      overflow: hidden;
+    }
+  }
+}
+
+// ── Snackbar / Toast ─────────────────────────────────────────
+.snack-success {
+  .mdc-snackbar__surface {
+    background: rgba(6, 255, 165, 0.12) !important;
+    border: 1px solid rgba(6, 255, 165, 0.25) !important;
+    border-radius: 10px !important;
+  }
+  .mdc-snackbar__label { color: #06ffa5 !important; }
+  .mat-mdc-snack-bar-action { color: rgba(6, 255, 165, 0.6) !important; }
+}
+
+.snack-error {
+  .mdc-snackbar__surface {
+    background: rgba(255, 107, 107, 0.12) !important;
+    border: 1px solid rgba(255, 107, 107, 0.25) !important;
+    border-radius: 10px !important;
+  }
+  .mdc-snackbar__label { color: #ff9a9a !important; }
+  .mat-mdc-snack-bar-action { color: rgba(255, 107, 107, 0.6) !important; }
+}
+
+.snack-info {
+  .mdc-snackbar__surface {
+    background: rgba(72, 202, 228, 0.12) !important;
+    border: 1px solid rgba(72, 202, 228, 0.25) !important;
+    border-radius: 10px !important;
+  }
+  .mdc-snackbar__label { color: #48cae4 !important; }
+  .mat-mdc-snack-bar-action { color: rgba(72, 202, 228, 0.6) !important; }
+}
+
+// ── Material Tooltip Override ────────────────────────────────
+.mat-mdc-tooltip {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 12px !important;
+  background: rgba(20, 22, 36, 0.95) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 6px !important;
+}
+
+// ── Utility ──────────────────────────────────────────────────
+.text-muted { color: rgba(255,255,255,0.4); }
+.text-accent { color: #6c63ff; }
+.text-success { color: #06ffa5; }
+.text-danger  { color: #ff6b6b; }
+.text-warning { color: #ffc400; }
+
+// Light theme overrides for the existing dark-first component styles.
+body.theme-light {
+  ::-webkit-scrollbar-thumb { background: rgba(23,32,51,0.16); }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(23,32,51,0.28); }
+
+  .text-muted { color: var(--app-text-faint); }
+
+  .login-page,
+  .layout {
+    background:
+      radial-gradient(circle at top left, rgba(108,99,255,0.11), transparent 34rem),
+      linear-gradient(135deg, #f8fbff 0%, #eef3fb 100%);
+    color: var(--app-text);
+  }
+
+  .grid-overlay {
+    background-image:
+      linear-gradient(rgba(108,99,255,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,0.08) 1px, transparent 1px);
+  }
+
+  .orb { opacity: 0.18; }
+  .particle { opacity: 0.45; }
+
+  .brand-text h1,
+  .card-header h2,
+  .logo .logo-text,
+  .page-header h1,
+  .page-header .username,
+  .table-title h2,
+  .stat-body .stat-val,
+  .header-left h1,
+  .user-core .username,
+  .user-info .user-name {
+    color: var(--app-text);
+  }
+
+  .brand-text p,
+  .card-header p,
+  .field-label,
+  .page-header .greeting,
+  .header-left p,
+  .user-meta .meta-label,
+  .user-meta .meta-value,
+  .async-info span,
+  .delay-selector .delay-label,
+  .delay-pill,
+  .table-title .record-count,
+  .count-badge,
+  .user-core .user-id,
+  .user-info .user-role,
+  .nav-item {
+    color: var(--app-text-faint);
+  }
+
+  .login-card,
+  .sidebar,
+  .table-section,
+  .stat-card,
+  .user-card {
+    background: var(--app-surface);
+    border-color: var(--app-border);
+    box-shadow: var(--app-shadow);
+  }
+
+  .sidebar {
+    background: rgba(255,255,255,0.72);
+  }
+
+  .sidebar-top,
+  .sidebar-bottom,
+  .table-header {
+    border-color: var(--app-border);
+  }
+
+  .collapse-btn,
+  .demo-badge,
+  .input-wrapper,
+  .role-pill,
+  .search-box,
+  .filter-select,
+  .delay-pill,
+  .theme-toggle,
+  .login-theme-toggle {
+    background: rgba(255,255,255,0.76);
+    border-color: var(--app-border);
+    color: var(--app-text-muted);
+  }
+
+  .collapse-btn:hover,
+  .demo-badge:hover,
+  .nav-item:hover,
+  .delay-pill:hover:not(.active),
+  .user-card:hover,
+  .stat-card:hover {
+    background: rgba(108,99,255,0.08);
+    border-color: rgba(108,99,255,0.22);
+    color: var(--app-text);
+  }
+
+  .input-wrapper input,
+  .search-box input,
+  .filter-select {
+    color: var(--app-text);
+  }
+
+  .input-wrapper input::placeholder,
+  .search-box input::placeholder {
+    color: rgba(23,32,51,0.34);
+  }
+
+  .input-wrapper input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    -webkit-text-fill-color: #172033 !important;
+  }
+
+  .role-pill.active,
+  .nav-item.active,
+  .delay-pill.active,
+  .access-badge.admin-access,
+  .async-demo-bar {
+    background: rgba(108,99,255,0.10);
+    border-color: rgba(108,99,255,0.26);
+  }
+
+  .role-badge,
+  .nav-badge.admin-badge {
+    background: rgba(108,99,255,0.10);
+    color: #5148da;
+    border-color: rgba(108,99,255,0.20);
+  }
+
+  .avatar-wrap .avatar,
+  .avatar-area .avatar {
+    background: #eef3fb;
+  }
+
+  .avatar-wrap .status-dot,
+  .avatar-area .status-indicator {
+    border-color: #ffffff;
+  }
+
+  .filter-select option {
+    background: #ffffff;
+    color: #172033;
+  }
+
+  .mat-mdc-tooltip {
+    background: rgba(255,255,255,0.95) !important;
+    border-color: var(--app-border) !important;
+    color: var(--app-text) !important;
+  }
+
+  .nd-dialog .mat-mdc-dialog-container {
+    box-shadow: 0 32px 80px rgba(31,45,75,0.20) !important;
+  }
+}
+
+body.theme-light {
+  .dashboard-page,
+  .admin-page,
+  .dialog-container {
+    color: var(--app-text) !important;
+  }
+
+  .dialog-container {
+    background: #ffffff !important;
+    border-color: var(--app-border) !important;
+    box-shadow: var(--app-shadow);
+  }
+
+  .dialog-header,
+  .card-actions,
+  .records-table th,
+  .records-table .table-row,
+  .pagination {
+    border-color: var(--app-border) !important;
+  }
+
+  .dialog-title,
+  .records-table td,
+  .title-cell .title-text,
+  .user-core .username,
+  .stat-body .stat-val,
+  .table-title h2,
+  .header-left h1,
+  .page-header h1,
+  .page-header .username {
+    color: var(--app-text) !important;
+  }
+
+  .dialog-sub,
+  .field-label,
+  .records-table th,
+  .title-cell .assigned-to,
+  .category-tag,
+  .progress-cell .progress-pct,
+  .due-date,
+  .info-row,
+  .empty-state,
+  .user-core .user-id,
+  .count-badge,
+  .table-title .record-count,
+  .header-left p,
+  .delay-selector .delay-label,
+  .page-btn,
+  .btn-cancel,
+  .toggle-pw,
+  .action-btn svg {
+    color: var(--app-text-muted) !important;
+  }
+
+  .category-tag,
+  .count-badge,
+  .card-actions,
+  .status-bar:not(.active) {
+    background: rgba(23,32,51,0.04) !important;
+  }
+
+  .input-wrap,
+  .select-wrap,
+  .role-pill,
+  .btn-cancel,
+  .page-btn,
+  .action-btn {
+    background: #ffffff !important;
+    border-color: var(--app-border) !important;
+  }
+
+  .input-wrap input,
+  .select-wrap select {
+    color: var(--app-text) !important;
+  }
+
+  .input-wrap input::placeholder {
+    color: rgba(23,32,51,0.34) !important;
+  }
+
+  .input-wrap input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+    -webkit-text-fill-color: #172033 !important;
+  }
+
+  .select-wrap select option {
+    background: #ffffff !important;
+    color: #172033 !important;
+  }
+
+  .records-table .table-row:hover,
+  .page-btn:hover:not(:disabled),
+  .btn-cancel:hover,
+  .close-btn:hover,
+  .action-btn:hover {
+    background: rgba(108,99,255,0.08) !important;
+    color: var(--app-text) !important;
+  }
+
+  .close-btn {
+    background: rgba(23,32,51,0.04) !important;
+    border-color: var(--app-border) !important;
+    color: var(--app-text-muted) !important;
+  }
+
+  .page-btn.active,
+  .role-pill.active {
+    background: rgba(108,99,255,0.12) !important;
+    border-color: #6c63ff !important;
+    color: #5148da !important;
+  }
+
+  .s-closed,
+  .status-bar:not(.active) {
+    color: var(--app-text-faint) !important;
+    border-color: var(--app-border) !important;
+  }
+
+  .skel-box,
+  .skeleton-card .skel-avatar,
+  .skeleton-card .skel-line {
+    background: linear-gradient(90deg, rgba(23,32,51,0.05) 0%, rgba(23,32,51,0.10) 50%, rgba(23,32,51,0.05) 100%) !important;
+    background-size: 200% 100% !important;
+  }
+
+  .mini-spinner {
+    border-color: rgba(23,32,51,0.14) !important;
+    border-top-color: #6c63ff !important;
+  }
+}

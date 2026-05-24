@@ -1,0 +1,7 @@
+<div class="app-root">
+  <!-- Global top loading bar -->
+  <div class="global-loader" [class.visible]="isLoading$ | async">
+    <div class="loader-bar"></div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

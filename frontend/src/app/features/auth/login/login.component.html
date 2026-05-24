@@ -1,0 +1,152 @@
+<div class="login-page">
+  <button
+    class="login-theme-toggle"
+    type="button"
+    (click)="toggleTheme()"
+    [attr.aria-label]="themeService.currentTheme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'">
+    <svg *ngIf="themeService.currentTheme === 'light'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg *ngIf="themeService.currentTheme === 'dark'" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    {{ themeService.currentTheme === 'light' ? 'Dark' : 'Light' }}
+  </button>
+
+  <!-- Animated background -->
+  <div class="bg-canvas">
+    <div class="grid-overlay"></div>
+    <div *ngFor="let p of particles; let i = index"
+         class="particle"
+         [style.--i]="i"
+         [style.--delay]="(i * 0.4) + 's'"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="login-container">
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">
+        <span class="icon-hex">⬡</span>
+        <span class="icon-inner">N</span>
+      </div>
+      <div class="brand-text">
+        <h1>NexusDash</h1>
+        <p>Enterprise Intelligence Platform</p>
+      </div>
+    </div>
+
+    <!-- Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <h2>Sign In</h2>
+        <p>Access your workspace</p>
+      </div>
+
+      <!-- Demo quick-fill -->
+      <div class="demo-badges">
+        <button class="demo-badge admin" (click)="fillDemo('admin')" type="button">
+          <span class="dot"></span> Admin Demo
+        </button>
+        <button class="demo-badge user" (click)="fillDemo('user')" type="button">
+          <span class="dot"></span> User Demo
+        </button>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- User ID -->
+        <div class="field-group">
+          <label class="field-label">User ID</label>
+          <div class="input-wrapper" [class.error]="loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <input
+              formControlName="userId"
+              type="text"
+              placeholder="e.g. ADMIN001"
+              autocomplete="username"
+            />
+          </div>
+          <span class="field-error" *ngIf="loginForm.get('userId')?.invalid && loginForm.get('userId')?.touched">
+            User ID must be at least 3 characters
+          </span>
+        </div>
+
+        <!-- Password -->
+        <div class="field-group">
+          <label class="field-label">Password</label>
+          <div class="input-wrapper" [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input
+              formControlName="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Enter password"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+              <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <span class="field-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Password must be at least 6 characters
+          </span>
+        </div>
+
+        <!-- Role -->
+        <div class="field-group">
+          <label class="field-label">Role</label>
+          <div class="role-pills">
+            <label
+              *ngFor="let role of roles"
+              class="role-pill"
+              [class.active]="loginForm.get('role')?.value === role">
+              <input
+                type="radio"
+                formControlName="role"
+                [value]="role"
+              />
+              <span class="pill-icon">{{ role === 'Admin' ? '⚙' : '👤' }}</span>
+              {{ role }}
+            </label>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div class="error-banner" *ngIf="errorMessage">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="loginForm.invalid || isLoading">
+          <span class="btn-content" *ngIf="!isLoading">
+            Sign In
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+          <span class="btn-content" *ngIf="isLoading">
+            <span class="spinner"></span> Authenticating...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <p class="footer-note">NexusDash v1.0 · Secure Enterprise Access</p>
+  </div>
+</div>

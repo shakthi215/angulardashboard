@@ -1,0 +1,99 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <div>
+      <h2 class="dialog-title">{{ title }}</h2>
+      <p class="dialog-sub">{{ isEdit ? 'Update user information' : 'Create a new platform user' }}</p>
+    </div>
+    <button class="close-btn" (click)="cancel()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dialog-form" novalidate>
+
+    <!-- Username -->
+    <div class="field-group">
+      <label class="field-label">Username</label>
+      <div class="input-wrap" [class.has-error]="form.get('username')?.invalid && form.get('username')?.touched">
+        <input formControlName="username" type="text" placeholder="e.g. john_doe" />
+      </div>
+      <span class="field-error" *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+        Username must be at least 3 characters
+      </span>
+    </div>
+
+    <!-- Email -->
+    <div class="field-group">
+      <label class="field-label">Email</label>
+      <div class="input-wrap" [class.has-error]="form.get('email')?.invalid && form.get('email')?.touched">
+        <input formControlName="email" type="email" placeholder="user@example.com" />
+      </div>
+      <span class="field-error" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+        Please enter a valid email
+      </span>
+    </div>
+
+    <!-- Password (create only) -->
+    <div class="field-group" *ngIf="!isEdit">
+      <label class="field-label">Password</label>
+      <div class="input-wrap password-wrap" [class.has-error]="form.get('password')?.invalid && form.get('password')?.touched">
+        <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Min. 6 characters" />
+        <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+          <svg *ngIf="!showPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg *ngIf="showPassword"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
+      <span class="field-error" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+        Password must be at least 6 characters
+      </span>
+    </div>
+
+    <!-- Role & Department (2-col) -->
+    <div class="two-col">
+      <div class="field-group">
+        <label class="field-label">Role</label>
+        <div class="role-pills">
+          <label class="role-pill" *ngFor="let role of roles" [class.active]="form.get('role')?.value === role">
+            <input type="radio" formControlName="role" [value]="role" />
+            {{ role === 'Admin' ? '⚙ Admin' : '👤 User' }}
+          </label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Department</label>
+        <div class="select-wrap">
+          <select formControlName="department">
+            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error banner -->
+    <div class="error-banner" *ngIf="errorMessage">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="form.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ isEdit ? 'Save Changes' : 'Create User' }}</span>
+        <span *ngIf="isLoading" class="spinner-wrap">
+          <span class="spinner"></span>
+          {{ isEdit ? 'Saving...' : 'Creating...' }}
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
