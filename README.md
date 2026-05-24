@@ -2,6 +2,8 @@
 
 A full-stack Angular 17 + Node.js (TypeScript) + MongoDB Atlas SPA with role-based access control, async API processing demonstration, and a creative dark and light UI.
 
+Live Frontend: https://angulardashboard-sigma.vercel.app/
+
 ---
 
 ## 🚀 Quick Start
