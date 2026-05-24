@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-api-domain.com/api',
+  apiUrl: 'https://angulardashboard.onrender.com/api',
   appName: 'NexusDash',
   version: '1.0.0',
 };

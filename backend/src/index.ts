@@ -21,7 +21,7 @@ app.use(helmet({
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://angulardashboard-sigma.vercel.app/']
+    ? ['https://angulardashboard-sigma.vercel.app']
     : ['http://localhost:4200', 'http://localhost:4201'],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
